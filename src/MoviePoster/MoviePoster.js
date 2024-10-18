@@ -1,9 +1,12 @@
 import './MoviePoster.css';
+import React from 'react';
 
-function MoviePoster() {
+function MoviePoster( { title, poster, voteCount } ) {
   return (
     <section className='MoviePoster'>
-      <p>This is a movie poster.</p>
+      <img src={poster} alt={title} /> 
+      <h2>{title}</h2>
+      <p>{voteCount}</p>
     </section>
   );
 }
