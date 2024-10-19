@@ -4,8 +4,19 @@
   }
 
 body {
-  background-color: #3e49b1;
+  display: flex;
+  width: 100vw;
+  height: 100vw;
+  /* background-color: #3e49b1; */
+  justify-content: center;
+  background-image: linear-gradient(225deg,#062390 30%, #051f7e 60%, #04165a 100%);
 }
+
+/* 
+#062390
+#051f7e
+#04165a
+*/
 
 header {
   display: flex;
@@ -23,6 +34,6 @@ h1 {
 p {
   font-size: 20px;
   text-align: center;
-  margin-top: 50px;
+  /* margin-top: 1px; */
   color: white;
 }
