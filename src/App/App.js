@@ -2,6 +2,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import MoviesContainer from '../MoviesContainer/MoviesContainer';
 import moviePosters from '../data/movie_posters';
+import rancid from '../icons/rancid.webp';
 import searchIcon from '../icons/search.png';
 import movieDetails from '../MovieDetails/MovieDetails';
 
@@ -14,14 +15,16 @@ function App() {
   return (
     <main className='App'>
       <header>
-        <h1>Rancid Tomatillos</h1>
+        <h1>
+          Rancid Tomatillos
+          </h1>
       </header>
       <MoviesContainer movies={ movies } />
       
       {/* 
       <RandomScroller />
       <section className='SearchBar'>
-      { userClick && <MovieDetails /> } 
+      { userClick && <MovieDetails /> } https://image.tmdb.org/t/p/original//nnl6OWkyPpuMm595hmAxNW3rZFn.jpg
       */}
     </main>
   );

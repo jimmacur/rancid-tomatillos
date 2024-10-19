@@ -1,14 +1,19 @@
 .MoviePoster {
-  width:95%;
+  width:90%;
   height: 80%;
-  border-radius: 5px;
   .movie-poster {
     width: 100%;
     height: 100%;
     object-fit: contain;
     aspect-ratio: 1 / 1;
-    border-radius: 5px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, .5);
   };
+
+}
+
+.upvote-span {
+  margin-right: 3px;
 }
 
 .upvote-arrow {
@@ -16,9 +21,11 @@
   height: 10%;
 }
 
+.downvote-span {
+  margin-left: 3px;
+}
+
 .downvote-arrow {
   width: 10%;
   height: 10%;
 }
-
-/* .movie-poster {} */

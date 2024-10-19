@@ -15,5 +15,17 @@
   align-items: center;
   justify-items: center;
   background-color: rgba(0, 0, 0, .5);
-  border: 5px solid #BA4A00;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, .5);
+}
+
+.MoviesContainer::-webkit-scrollbar {
+  height: 18px; 
+}
+
+.MoviesContainer::-webkit-scrollbar-thumb {
+  background-color: #007cb9; 
+  border-radius: 10px; 
+  border: 1px solid #000;
+  
 }
