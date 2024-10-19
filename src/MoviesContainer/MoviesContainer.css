@@ -1,0 +1,19 @@
+/* * {
+  border: 1px solid white;
+} */
+
+/* BA4A00 */
+
+.MoviesContainer {
+  display: grid;
+  width: 95vw;
+  height: 35vw;
+  grid-auto-flow: column;
+  grid-auto-columns: 21%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  align-items: center;
+  justify-items: center;
+  background-color: rgba(0, 0, 0, .5);
+  border: 5px solid #BA4A00;
+}

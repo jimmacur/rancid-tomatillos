@@ -1,0 +1,24 @@
+.MoviePoster {
+  width:95%;
+  height: 80%;
+  border-radius: 5px;
+  .movie-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+  };
+}
+
+.upvote-arrow {
+  width: 10%;
+  height: 10%;
+}
+
+.downvote-arrow {
+  width: 10%;
+  height: 10%;
+}
+
+/* .movie-poster {} */
