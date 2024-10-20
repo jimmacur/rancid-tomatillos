@@ -1,17 +1,14 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import MoviesContainer from '../MoviesContainer/MoviesContainer.js';
-// import MoviePoster from '../MoviePoster/MoviePoster.js';
-import moviePosters from '../data/movie_posters.js';
-import rancid from '../icons/rancid.webp';
+import moviePosters from '../data/movie_posters';
+import movieDetails from '../data/movie_details';
+import MovieDetails from '../MovieDetails/MovieDetails.js';
 import searchIcon from '../icons/search.png';
-import movieDetails from '../MovieDetails/MovieDetails';
-
-// Example imports (for later):
-// import RandomScroller from '../RandomScroller/RandomScroller';
 
 function App() {
   const [movies, setMovies] = useState(moviePosters);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   function addUpVote(anId) {
     let selectedMovie = movies.find((movie) => anId === movie.id);
@@ -27,20 +24,28 @@ function App() {
     setMovies(updatedMovie);
   };
   
+  const handleMovieClick = (id) => {
+    setSelectedMovie(movieDetails);
+  }
+
   return (
     <main className='App'>
       <header>
         <h1>
           Rancid Tomatillos
-          </h1>
+        </h1>
       </header>
-      <MoviesContainer movies={ movies } addUpVote={ addUpVote } addDownVote={ addDownVote } />
-      
-      {/* 
-      <RandomScroller />
-      <section className='SearchBar'>
-      { userClick && <MovieDetails /> } https://image.tmdb.org/t/p/original//nnl6OWkyPpuMm595hmAxNW3rZFn.jpg
-      */}
+      {selectedMovie ? (
+        <MovieDetails 
+          movie={selectedMovie} 
+          onClose={() => setSelectedMovie(null)} />
+      ) : (
+        <MoviesContainer 
+          movies={ movies } 
+          addUpVote={ addUpVote } 
+          addDownVote={ addDownVote }
+          onMovieClick={ handleMovieClick } />
+      )}
     </main>
   );
 }
