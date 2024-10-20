@@ -7,16 +7,9 @@ body {
   display: flex;
   width: 100vw;
   height: 100vw;
-  /* background-color: #3e49b1; */
   justify-content: center;
-  background-image: linear-gradient(225deg,#062390 30%, #051f7e 60%, #04165a 100%);
+  background-image: linear-gradient(225deg,#005689 25%, #007cb9 50%, #005689 75%, #007cb9 100%);
 }
-
-/* 
-#062390
-#051f7e
-#04165a
-*/
 
 header {
   display: flex;
@@ -26,14 +19,15 @@ header {
 }
 
 h1 {
-  color: white;
-  font-size: 56px;
+  color: #ff895d;
+  text-shadow: 2px 2px 5px #000;
+  font-size: 70px;
   letter-spacing: 5px;
 }
 
 p {
   font-size: 20px;
   text-align: center;
-  /* margin-top: 1px; */
-  color: white;
+  color: #ff895d;
 }
+
