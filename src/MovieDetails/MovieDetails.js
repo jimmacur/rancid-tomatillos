@@ -2,10 +2,10 @@ import './MovieDetails.css';
 import React from 'react';
 import homeIcon from '../icons/home.png';
 
-function MovieDetails({ movie, onClose }) {
+function MovieDetails({ movie }) {
   return (
     <section className='MovieDetails'>
-      <img className='backdrop' src={movie.backdrop_path} alt={`${movie.title} backdrop`} />
+        <img className='backdrop' src={movie.backdrop_path} alt={`${movie.title} backdrop`} />
       <div className='movie-info'>
         <div className='details'>
           <h2 className='movie-title'>{movie.title}</h2>
@@ -21,9 +21,6 @@ function MovieDetails({ movie, onClose }) {
           <p className='overview'><strong>Overview:</strong> {movie.overview}</p>
         </div>
       </div>
-      <button className='home-button' onClick={onClose}>
-        <img src={homeIcon} alt='home icon' />
-      </button>
     </section>
   );
 }
