@@ -1,36 +1,70 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import MoviesContainer from '../MoviesContainer/MoviesContainer.js';
-// import MoviePoster from '../MoviePoster/MoviePoster.js';
-import moviePosters from '../data/movie_posters';
-import movieDetails from '../data/movie_details';
 import MovieDetails from '../MovieDetails/MovieDetails.js';
 import RandomScroller from '../RandomScroller/RandomScroller.js';
 import searchIcon from '../icons/search.png';
 import homeIcon from '../icons/home.png';
 
-// Example imports (for later):
-// import RandomScroller from '../RandomScroller/RandomScroller';
-
 function App() {
-  const [movies, setMovies] = useState(moviePosters);
+  const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  useEffect(() => { 
+    fetchMovies()
+  }, []);
+
+  function fetchMovies() {
+    fetch('https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies')
+      .then(response => response.json())
+      .then(data => {
+        setMovies(data); 
+      })
+      .catch(error => console.error(error))
+  }
+
+  function fetchMovieDetails(id) {
+    fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`)
+      .then(response => response.json())
+      .then(data => setSelectedMovie(data))
+      .catch(error => console.error(error))
+  }
 
   function addUpVote(anId) {
     let selectedMovie = movies.find((movie) => anId === movie.id);
-    selectedMovie.vote_count += 1
-    const updatedMovie = [...movies];
-    setMovies(updatedMovie);
+    const newVoteCount = selectedMovie.vote_count + 1
+    postVoteChange(newVoteCount, anId);
   };
 
   function addDownVote(anId) {
     let selectedMovie = movies.find((movie) => anId === movie.id);
-    selectedMovie.vote_count -= 1;
-    const updatedMovie = [...movies];
-    setMovies(updatedMovie);
+    const newVoteCount = selectedMovie.vote_count - 1;
+    postVoteChange(newVoteCount, anId);
   };
+
+  function postVoteChange(aChange, movieId){
+    fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${movieId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ vote_count: aChange })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const updatedMovies = movies.map((movie) => {
+          if (movie.id === movieId) {
+            return { ...movie, vote_count: aChange }
+          }
+        return movie
+        });
+        setMovies(updatedMovies)
+        })
+      .catch(error => console.error(error))
+  }
+
   const handleMovieClick = (id) => {
-    setSelectedMovie(movieDetails);
+    fetchMovieDetails(id);
   }
 
   const onClose = () => setSelectedMovie(null)
@@ -41,6 +75,7 @@ function App() {
     // console.log(index, '<-- INDEX FROM RANDOM FUNC')
     return index.slice(0, numOfMovies)
   };
+
   return (
     <main className='App'>
       {
@@ -75,5 +110,4 @@ function App() {
     </main>
   );
 }
-
 export default App;

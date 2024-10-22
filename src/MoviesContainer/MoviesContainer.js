@@ -2,7 +2,11 @@ import './MoviesContainer.css';
 import React from 'react';
 import MoviePoster from '../MoviePoster/MoviePoster';
 
-function MoviesContainer( { movies, addUpVote, addDownVote, onMovieClick } ) {
+function MoviesContainer( { movies = [], addUpVote, addDownVote, onMovieClick } ) {
+  if (!Array.isArray(movies) || movies.length === 0) {
+    return <p>Loading movies...</p>;
+  }
+  
   return (
       <section className='MoviesContainer'>
         { movies.map( movie => (

@@ -1,6 +1,5 @@
 import './MoviePoster.css';
 import React from 'react';
-import { useState } from 'react';
 import upvote from '../icons/upvote.png';
 import downvote from '../icons/downvote.png';
 
