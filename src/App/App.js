@@ -24,17 +24,26 @@ function App() {
     const updatedMovie = [...movies];
     setMovies(updatedMovie);
   };
-  
+
+  // console.log(movies)
+
+  function getRandomFive(aMovieList, numOfMovies) {
+    // console.log(aMovieList)
+    let index = [...aMovieList].sort(() => 0.5 - Math.random())
+    // console.log(index, '<-- INDEX FROM RANDOM FUNC')
+    return index.slice(0, numOfMovies)
+  };
+
   return (
     <main className='App'>
       <header>
         <h1>
           Rancid Tomatillos
-          </h1>
+        </h1>
       </header>
-      <RandomScroller />
-      <MoviesContainer movies={ movies } addUpVote={ addUpVote } addDownVote={ addDownVote } />
-      
+      <RandomScroller getRandomFive={ getRandomFive } movies={ movies } />
+      <MoviesContainer movies={movies} addUpVote={addUpVote} addDownVote={addDownVote} />
+
       {/* 
       <section className='SearchBar'>
       { userClick && <MovieDetails /> } https://image.tmdb.org/t/p/original//nnl6OWkyPpuMm595hmAxNW3rZFn.jpg
