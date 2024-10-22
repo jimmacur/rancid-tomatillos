@@ -1,11 +1,16 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import MoviesContainer from '../MoviesContainer/MoviesContainer.js';
+// import MoviePoster from '../MoviePoster/MoviePoster.js';
 import moviePosters from '../data/movie_posters';
 import movieDetails from '../data/movie_details';
 import MovieDetails from '../MovieDetails/MovieDetails.js';
+import RandomScroller from '../RandomScroller/RandomScroller.js';
 import searchIcon from '../icons/search.png';
 import homeIcon from '../icons/home.png';
+
+// Example imports (for later):
+// import RandomScroller from '../RandomScroller/RandomScroller';
 
 function App() {
   const [movies, setMovies] = useState(moviePosters);
@@ -24,13 +29,18 @@ function App() {
     const updatedMovie = [...movies];
     setMovies(updatedMovie);
   };
-
   const handleMovieClick = (id) => {
     setSelectedMovie(movieDetails);
   }
 
   const onClose = () => setSelectedMovie(null)
 
+  function getRandomFive(aMovieList, numOfMovies) {
+    // console.log(aMovieList)
+    let index = [...aMovieList].sort(() => 0.5 - Math.random())
+    // console.log(index, '<-- INDEX FROM RANDOM FUNC')
+    return index.slice(0, numOfMovies)
+  };
   return (
     <main className='App'>
       {
@@ -43,11 +53,14 @@ function App() {
               <img src={homeIcon} alt='home icon' />
             </button>
           </header> :
-          <header>
-            <h1>
-              Rancid Tomatillos
-            </h1>
-          </header>
+          <>
+            <header>
+              <h1>
+                Rancid Tomatillos
+              </h1>
+            </header>
+            <RandomScroller getRandomFive={getRandomFive} movies={movies} />
+          </>
       }
       {selectedMovie ? (
         <MovieDetails
