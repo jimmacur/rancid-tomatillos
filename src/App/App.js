@@ -44,12 +44,9 @@ function App() {
           : movie
       )
     );
-    postVoteChange(
-      movies.find((movie) => movie.id === anId).vote_count + 1,
-      anId
-    );
+    postVoteChange('up', anId);
   }
-
+  
   function addDownVote(anId) {
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
@@ -58,25 +55,31 @@ function App() {
           : movie
       )
     );
-    postVoteChange(
-      movies.find((movie) => movie.id === anId).vote_count - 1,
-      anId
-    );
+    postVoteChange('down', anId);
   }
 
-  function postVoteChange(aChange, movieId) {
+  function postVoteChange(voteDirection, id) {
+    const requestBody = {
+      vote_direction: voteDirection 
+    };
+
     fetch(
-      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${movieId}`,
+      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ vote_count: aChange }),
+        body: JSON.stringify(requestBody),
       }
     )
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
+    .then((response) => {
+      if (!response.ok) throw Error('Failed to update vote');
+      return response.json();
+    })
+    .catch((error) => {
+      console(error => console.error(error));
+    });
   }
 
   const handleMovieClick = (id) => {
