@@ -1,9 +1,3 @@
-* {
-  border: 1px solid white;
-}
-
-
-
 .MoviesContainer {
   display: grid;
   width: 95vw;
