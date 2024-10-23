@@ -1,113 +1,158 @@
-import './App.css';
-import { useState, useEffect } from 'react';
-import MoviesContainer from '../MoviesContainer/MoviesContainer.js';
-import MovieDetails from '../MovieDetails/MovieDetails.js';
-import RandomScroller from '../RandomScroller/RandomScroller.js';
-import searchIcon from '../icons/search.png';
-import homeIcon from '../icons/home.png';
+import "./App.css";
+import { useState, useEffect } from "react";
+import MoviesContainer from "../MoviesContainer/MoviesContainer.js";
+import MovieDetails from "../MovieDetails/MovieDetails.js";
+import RandomScroller from "../RandomScroller/RandomScroller.js";
+import homeIcon from "../icons/home.png";
+import { Routes, Route, useNavigate } from "react-router-dom";
+// import searchIcon from '../icons/search.png';
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => { 
-    fetchMovies()
+  useEffect(() => {
+    fetchMovies();
   }, []);
 
   function fetchMovies() {
-    fetch('https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies')
-      .then(response => response.json())
-      .then(data => {
-        setMovies(data); 
+    fetch(
+      "https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMovies(data);
       })
-      .catch(error => console.error(error))
+      .catch((error) => console.error(error));
   }
 
   function fetchMovieDetails(id) {
-    fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`)
-      .then(response => response.json())
-      .then(data => setSelectedMovie(data))
-      .catch(error => console.error(error))
+    fetch(
+      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`
+    )
+      .then((response) => response.json())
+      .then((data) => setSelectedMovie(data))
+      .catch((error) => console.error(error));
   }
 
   function addUpVote(anId) {
-    let selectedMovie = movies.find((movie) => anId === movie.id);
-    const newVoteCount = selectedMovie.vote_count + 1
-    postVoteChange(newVoteCount, anId);
-  };
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) =>
+        movie.id === anId
+          ? { ...movie, vote_count: movie.vote_count + 1 }
+          : movie
+      )
+    );
+    postVoteChange(
+      movies.find((movie) => movie.id === anId).vote_count + 1,
+      anId
+    );
+  }
 
   function addDownVote(anId) {
-    let selectedMovie = movies.find((movie) => anId === movie.id);
-    const newVoteCount = selectedMovie.vote_count - 1;
-    postVoteChange(newVoteCount, anId);
-  };
+    setMovies((prevMovies) =>
+      prevMovies.map((movie) =>
+        movie.id === anId
+          ? { ...movie, vote_count: movie.vote_count - 1 }
+          : movie
+      )
+    );
+    postVoteChange(
+      movies.find((movie) => movie.id === anId).vote_count - 1,
+      anId
+    );
+  }
 
-  function postVoteChange(aChange, movieId){
-    fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${movieId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ vote_count: aChange })
-    })
-      .then(response => response.json())
-      .then(data => {
-        const updatedMovies = movies.map((movie) => {
-          if (movie.id === movieId) {
-            return { ...movie, vote_count: aChange }
-          }
-        return movie
-        });
-        setMovies(updatedMovies)
-        })
-      .catch(error => console.error(error))
+  function postVoteChange(aChange, movieId) {
+    fetch(
+      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${movieId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ vote_count: aChange }),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
   }
 
   const handleMovieClick = (id) => {
     fetchMovieDetails(id);
-  }
-
-  const onClose = () => setSelectedMovie(null)
-
-  function getRandomFive(aMovieList, numOfMovies) {
-    // console.log(aMovieList)
-    let index = [...aMovieList].sort(() => 0.5 - Math.random())
-    // console.log(index, '<-- INDEX FROM RANDOM FUNC')
-    return index.slice(0, numOfMovies)
+    navigate(`/movies/${id}`);
   };
 
+  const onClose = () => {
+    setSelectedMovie(null);
+    navigate("/");
+  };
+
+  function getRandomFive(aMovieList, numOfMovies) {
+    let index = [...aMovieList].sort(() => 0.5 - Math.random());
+    return index.slice(0, numOfMovies);
+  }
+
+  function getFiveDetails(aMovieList) {
+    let fiveRandomDetails = [];
+    // console.log(aMovieList, "<-- CHECK HERE IN FIVE DETAILS FUNC");
+    aMovieList.forEach((film) => {
+      fetch(
+        `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${film.id}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data, "<-- CHECK HERE TOO IN FIVE DETAILS FUNC");
+          fiveRandomDetails.push(data);
+        })
+        .catch((error) => console.error(error));
+    });
+    return fiveRandomDetails;
+  }
+
   return (
-    <main className='App'>
-      {
-        selectedMovie ?
-          <header>
-            <h1>
-              Rancid Tomatillos
-            </h1>
-            <button className='home-button' onClick={onClose}>
-              <img src={homeIcon} alt='home icon' />
-            </button>
-          </header> :
-          <>
-            <header>
-              <h1>
-                Rancid Tomatillos
-              </h1>
-            </header>
-            <RandomScroller getRandomFive={getRandomFive} movies={movies} />
-          </>
-      }
-      {selectedMovie ? (
-        <MovieDetails
-          movie={selectedMovie} />
-      ) : (
-        <MoviesContainer
-          movies={movies}
-          addUpVote={addUpVote}
-          addDownVote={addDownVote}
-          onMovieClick={handleMovieClick} />
-      )}
+    <main className="App">
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <header>
+                <h1>Rancid Tomatillos</h1>
+              </header>
+              {/* <RandomScroller getRandomFive={getRandomFive} movies={movies} /> */}
+              <RandomScroller
+                movies={movies}
+                getRandomFive={getRandomFive}
+                getFiveDetails={getFiveDetails}
+              />
+              <MoviesContainer
+                movies={movies}
+                addUpVote={addUpVote}
+                addDownVote={addDownVote}
+                onMovieClick={handleMovieClick}
+              />
+            </>
+          }
+        />
+        <Route
+          path="/movies/:id"
+          element={
+            <>
+              <header>
+                <h1>Rancid Tomatillos</h1>
+                <button className="home-button" onClick={onClose}>
+                  <img src={homeIcon} alt="home icon" />
+                </button>
+              </header>
+              {selectedMovie && <MovieDetails movie={selectedMovie} />}
+            </>
+          }
+        />
+      </Routes>
     </main>
   );
 }
+
 export default App;
