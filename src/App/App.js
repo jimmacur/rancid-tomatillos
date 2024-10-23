@@ -5,7 +5,6 @@ import MovieDetails from "../MovieDetails/MovieDetails.js";
 import RandomScroller from "../RandomScroller/RandomScroller.js";
 import homeIcon from "../icons/home.png";
 import { Routes, Route, useNavigate } from "react-router-dom";
-// import searchIcon from '../icons/search.png';
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -92,27 +91,30 @@ function App() {
     navigate("/");
   };
 
+  let theRandomList = [];
+  
   function getRandomFive(aMovieList, numOfMovies) {
     let index = [...aMovieList].sort(() => 0.5 - Math.random());
     return index.slice(0, numOfMovies);
   }
-
+  
   function getFiveDetails(aMovieList) {
-    let fiveRandomDetails = [];
-    // console.log(aMovieList, "<-- CHECK HERE IN FIVE DETAILS FUNC");
     aMovieList.forEach((film) => {
-      fetch(
-        `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${film.id}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data, "<-- CHECK HERE TOO IN FIVE DETAILS FUNC");
-          fiveRandomDetails.push(data);
-        })
-        .catch((error) => console.error(error));
+      fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${film.id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        theRandomList.push(data);
+      })
+      .catch((error) => console.error(error));
     });
-    return fiveRandomDetails;
-  }
+  };
+
+  async function forRandomScroller() {
+    let randomFive = getRandomFive(movies, 5);
+    await getFiveDetails(randomFive)
+  };
+
+  forRandomScroller();
 
   return (
     <main className="App">
@@ -125,11 +127,7 @@ function App() {
                 <h1>Rancid Tomatillos</h1>
               </header>
               {/* <RandomScroller getRandomFive={getRandomFive} movies={movies} /> */}
-              <RandomScroller
-                movies={movies}
-                getRandomFive={getRandomFive}
-                getFiveDetails={getFiveDetails}
-              />
+              <RandomScroller theRandomList={ theRandomList } />
               <MoviesContainer
                 movies={movies}
                 addUpVote={addUpVote}
