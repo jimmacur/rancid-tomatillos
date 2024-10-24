@@ -1,16 +1,12 @@
 * {
-  /* border: 1px solid white; */
   margin: 0;
   padding: 0;
 }
 
-/* .App {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+.App {
   width: 97vw;
   height: 100vw;
-} */
+}
 
 header {
   display: flex;

@@ -4,6 +4,7 @@
   height: 35vw;
   grid-auto-flow: column;
   grid-auto-columns: 21%;
+  
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   align-items: center;

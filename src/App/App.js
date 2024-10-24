@@ -1,10 +1,12 @@
 import "./App.css";
-import { useState, useEffect } from "react";
-import MoviesContainer from "../MoviesContainer/MoviesContainer.js";
+import homeIcon from "../icons/home.png";
 import MovieDetails from "../MovieDetails/MovieDetails.js";
 import RandomScroller from "../RandomScroller/RandomScroller.js";
-import homeIcon from "../icons/home.png";
+import MoviesContainer from "../MoviesContainer/MoviesContainer.js";
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+
+const API_BASE_URL = "https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -16,9 +18,8 @@ function App() {
   }, []);
 
   function fetchMovies() {
-    fetch("https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies")
+    fetch(`${API_BASE_URL}`)
       .then((response) => {
-        // console.log(response, '<-- RESP')
         if (!response.ok && response.status === 404) {
           alert('Oops! Something is wrong at the server! Please try accessing Rancid Tomatillos later!')
         } else if (!response.ok) {
@@ -32,34 +33,21 @@ function App() {
   }
 
   function fetchMovieDetails(id) {
-    fetch(
-      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`
-    )
+    fetch(`${API_BASE_URL}/${id}`)
       .then((response) => response.json())
       .then((data) => setSelectedMovie(data))
       .catch((error) => console.error(error));
   }
 
-  function addUpVote(anId) {
+  function handleVote(anId, voteDirection) {
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
         movie.id === anId
-          ? { ...movie, vote_count: movie.vote_count + 1 }
+          ? { ...movie, vote_count: movie.vote_count + (voteDirection === 'up' ? 1 : -1) }
           : movie
       )
     );
-    postVoteChange('up', anId);
-  }
-
-  function addDownVote(anId) {
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) =>
-        movie.id === anId
-          ? { ...movie, vote_count: movie.vote_count - 1 }
-          : movie
-      )
-    );
-    postVoteChange('down', anId);
+    postVoteChange(voteDirection, anId);
   }
 
   function postVoteChange(voteDirection, id) {
@@ -68,7 +56,7 @@ function App() {
     };
 
     fetch(
-      `https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${id}`,
+      `${API_BASE_URL}/${id}`,
       {
         method: "PATCH",
         headers: {
@@ -91,7 +79,7 @@ function App() {
     navigate(`/movies/${id}`);
   };
 
-  const onClose = () => {
+  const handleClose = () => {
     setSelectedMovie(null);
     navigate("/");
   };
@@ -105,17 +93,16 @@ function App() {
 
   function getFiveDetails(aMovieList) {
     aMovieList.forEach((film) => {
-      fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${film.id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          theRandomList.push(data);
-        })
-        .catch((error) => console.error(error));
+      fetch(`${API_BASE_URL}/${film.id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        theRandomList.push(data);
+      })
+      .catch((error) => console.error(error));
     });
   };
 
   async function forRandomScroller() {
-    // console.log(movies, '<-- MOVIES IN RANDO FUNC HANDLE')
     if (movies === undefined) {
       theRandomList.push('NO MOVIES RECIEVED!')
     } else {
@@ -136,12 +123,11 @@ function App() {
               <header>
                 <h1>Rancid Tomatillos</h1>
               </header>
-              {/* <RandomScroller getRandomFive={getRandomFive} movies={movies} /> */}
               <RandomScroller theRandomList={theRandomList} />
               <MoviesContainer
                 movies={movies}
-                addUpVote={addUpVote}
-                addDownVote={addDownVote}
+                addUpVote={(id) => handleVote(id, 'up')}
+                addDownVote={(id) => handleVote(id, 'down')}
                 onMovieClick={handleMovieClick}
               />
             </>
@@ -153,7 +139,7 @@ function App() {
             <>
               <header>
                 <h1>Rancid Tomatillos</h1>
-                <button className="home-button" onClick={onClose}>
+                <button className="home-button" onClick={handleClose}>
                   <img className={"home-button-img"} src={homeIcon} alt="home icon" />
                 </button>
               </header>

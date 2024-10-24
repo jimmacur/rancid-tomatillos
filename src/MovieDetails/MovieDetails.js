@@ -1,6 +1,5 @@
 import './MovieDetails.css';
 import React from 'react';
-import homeIcon from '../icons/home.png';
 
 function MovieDetails({ movie }) {
   return (
