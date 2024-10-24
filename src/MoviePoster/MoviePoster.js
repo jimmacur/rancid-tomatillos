@@ -2,7 +2,7 @@ import './MoviePoster.css';
 import React from 'react';
 import upvote from '../icons/upvote.png';
 import downvote from '../icons/downvote.png';
-import { tab } from '@testing-library/user-event/dist/tab';
+
 
 function MoviePoster( { id, title, poster, voteCount, addUpVote, addDownVote, onClick } ) {
   const handleClick = (event) => {
