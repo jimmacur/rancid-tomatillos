@@ -144,7 +144,7 @@ function App() {
               <header>
                 <h1>Rancid Tomatillos</h1>
                 <button className="home-button" onClick={onClose}>
-                  <img src={homeIcon} alt="home icon" />
+                  <img className={"home-button-img"} src={homeIcon} alt="home icon" />
                 </button>
               </header>
               {selectedMovie && <MovieDetails movie={selectedMovie} />}
