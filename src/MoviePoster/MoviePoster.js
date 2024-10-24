@@ -2,6 +2,7 @@ import './MoviePoster.css';
 import React from 'react';
 import upvote from '../icons/upvote.png';
 import downvote from '../icons/downvote.png';
+import { tab } from '@testing-library/user-event/dist/tab';
 
 function MoviePoster( { id, title, poster, voteCount, addUpVote, addDownVote, onClick } ) {
   const handleClick = (event) => {
@@ -19,17 +20,45 @@ function MoviePoster( { id, title, poster, voteCount, addUpVote, addDownVote, on
     addDownVote(id);
   };
 
+  const handleKeyPress = (event, action) => {
+    if (event.key === 'Enter') {
+      action(event);
+    }
+  }
 
   return (
-    <section className='MoviePoster' onClick={handleClick}>
-      <img className={'movie-poster'} src={poster} alt={title} /> 
+    <section 
+      className='MoviePoster' 
+      onClick={handleClick}
+      tabIndex="0"
+      onKeyDown={(event) => handleKeyPress(event, handleClick)}
+    >
+      <img 
+        className={'movie-poster'} 
+        src={poster} 
+        alt={title ? `Poster for ${title}` : 'Movie poster'}      
+      /> 
       <p className={'vote-count-box'}>
         <span className={'upvote-span'}>
-          <img className={'upvote-arrow'} src={upvote} onClick={ handleUpVote } />
+          <img 
+            className={'upvote-arrow'} 
+            src={upvote} 
+            onClick={ handleUpVote } 
+            tabIndex="0"
+            onKeyDown={(event) => handleKeyPress(event, handleUpVote)}
+            alt="Upvote"  
+          />
         </span>
         {voteCount}
         <span className={'downvote-span'}>
-          <img className={'downvote-arrow'} src={downvote} onClick={ handleDownVote } />
+          <img 
+            className={'downvote-arrow'} 
+            src={downvote} 
+            onClick={ handleDownVote } 
+            tabIndex="0"
+            onKeyDown={(event) => handleKeyPress(event, handleDownVote)}
+            alt="Downvote"  
+          />
         </span>
       </p>
     </section>
