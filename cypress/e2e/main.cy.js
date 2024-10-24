@@ -74,4 +74,15 @@ describe('Main Page', () => {
     .get('header > .home-button > .home-button-img').click()
     .get('.random-scroller-container').should('be.visible')
   })
+
+  it('tells the user when the server is not operational', () => {
+    cy.intercept('GET', 'https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies', {
+      statusCode: 404,
+    })
+    cy.get('h1').should('contain', 'Rancid Tomatillos')
+    cy.on('window:alert', (str) => {
+      expect(str).to.equal('Oops! Something is wrong at the server! Please try accessing Rancid Tomatillos later!')
+    })
+    .get('.random-scroller-container-error > .error-message-title').should('contain', 'NO MOVIES RECIEVED!')
+  })
 })

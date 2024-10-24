@@ -16,14 +16,19 @@ function App() {
   }, []);
 
   function fetchMovies() {
-    fetch(
-      "https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setMovies(data);
+    fetch("https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies")
+      .then((response) => {
+        // console.log(response, '<-- RESP')
+        if (!response.ok && response.status === 404) {
+          alert('Oops! Something is wrong at the server! Please try accessing Rancid Tomatillos later!')
+        } else if (!response.ok) {
+          alert('Oops! something went wrong! Please refresh the page!')
+        } else {
+          return response.json()
+        }
       })
-      .catch((error) => console.error(error));
+      .then((data) => setMovies(data))
+      .catch((error) => console.log(error, '<-- FROM .CATCH ERROR MSG'));
   }
 
   function fetchMovieDetails(id) {
@@ -45,7 +50,7 @@ function App() {
     );
     postVoteChange('up', anId);
   }
-  
+
   function addDownVote(anId) {
     setMovies((prevMovies) =>
       prevMovies.map((movie) =>
@@ -59,7 +64,7 @@ function App() {
 
   function postVoteChange(voteDirection, id) {
     const requestBody = {
-      vote_direction: voteDirection 
+      vote_direction: voteDirection
     };
 
     fetch(
@@ -72,13 +77,13 @@ function App() {
         body: JSON.stringify(requestBody),
       }
     )
-    .then((response) => {
-      if (!response.ok) throw Error('Failed to update vote');
-      return response.json();
-    })
-    .catch((error) => {
-      console(error => console.error(error));
-    });
+      .then((response) => {
+        if (!response.ok) throw Error('Failed to update vote');
+        return response.json();
+      })
+      .catch((error) => {
+        console(error => console.error(error));
+      });
   }
 
   const handleMovieClick = (id) => {
@@ -92,26 +97,31 @@ function App() {
   };
 
   let theRandomList = [];
-  
+
   function getRandomFive(aMovieList, numOfMovies) {
     let index = [...aMovieList].sort(() => 0.5 - Math.random());
     return index.slice(0, numOfMovies);
   }
-  
+
   function getFiveDetails(aMovieList) {
     aMovieList.forEach((film) => {
       fetch(`https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies/${film.id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        theRandomList.push(data);
-      })
-      .catch((error) => console.error(error));
+        .then((response) => response.json())
+        .then((data) => {
+          theRandomList.push(data);
+        })
+        .catch((error) => console.error(error));
     });
   };
 
   async function forRandomScroller() {
-    let randomFive = getRandomFive(movies, 5);
-    await getFiveDetails(randomFive)
+    // console.log(movies, '<-- MOVIES IN RANDO FUNC HANDLE')
+    if (movies === undefined) {
+      theRandomList.push('NO MOVIES RECIEVED!')
+    } else {
+      let randomFive = getRandomFive(movies, 5);
+      await getFiveDetails(randomFive)
+    }
   };
 
   forRandomScroller();
@@ -127,7 +137,7 @@ function App() {
                 <h1>Rancid Tomatillos</h1>
               </header>
               {/* <RandomScroller getRandomFive={getRandomFive} movies={movies} /> */}
-              <RandomScroller theRandomList={ theRandomList } />
+              <RandomScroller theRandomList={theRandomList} />
               <MoviesContainer
                 movies={movies}
                 addUpVote={addUpVote}
