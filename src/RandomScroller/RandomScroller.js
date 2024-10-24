@@ -23,10 +23,8 @@ function RandomScroller({ theRandomList }) {
       <div className={'random-scroller-container'}>
         {
           theRandomList.map((movie, index) => {
-            // console.log(movie, '<-- MOVIE IN SCROLLER RETURN')
             return (
               <div key={movie.id} className={`movie-for-scroller ${currentIndex === index ? 'currentIndex' : 'currentIndex-hidden'}`} >
-                {/* <div className={'movie-scroller-img-1'} style={{backgroundImage: `url(${ movie.backdrop_path })`}} ></div> */}
                 <img className={'movie-scroller-img'} src={`${movie.backdrop_path}`} alt-text={' '} />
                 <p className={'movie-scroller-title'}>{movie.title}</p>
               </div>

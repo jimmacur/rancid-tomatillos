@@ -20,7 +20,6 @@ function App() {
   function fetchMovies() {
     fetch(`${API_BASE_URL}`)
       .then((response) => {
-        // console.log(response, '<-- RESP')
         if (!response.ok && response.status === 404) {
           alert('Oops! Something is wrong at the server! Please try accessing Rancid Tomatillos later!')
         } else if (!response.ok) {
@@ -104,7 +103,6 @@ function App() {
   };
 
   async function forRandomScroller() {
-    // console.log(movies, '<-- MOVIES IN RANDO FUNC HANDLE')
     if (movies === undefined) {
       theRandomList.push('NO MOVIES RECIEVED!')
     } else {
@@ -125,7 +123,6 @@ function App() {
               <header>
                 <h1>Rancid Tomatillos</h1>
               </header>
-              {/* <RandomScroller getRandomFive={getRandomFive} movies={movies} /> */}
               <RandomScroller theRandomList={theRandomList} />
               <MoviesContainer
                 movies={movies}
