@@ -9,12 +9,16 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 const API_BASE_URL = "https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies";
 
 function App() {
+  const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchMovies();
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000);
   }, []);
 
   function fetchMovies() {
@@ -30,14 +34,14 @@ function App() {
       })
       .then((data) => setMovies(data))
       .catch((error) => console.log(error, '<-- FROM .CATCH ERROR MSG'));
-  }
+  };
 
   function fetchMovieDetails(id) {
     fetch(`${API_BASE_URL}/${id}`)
       .then((response) => response.json())
       .then((data) => setSelectedMovie(data))
       .catch((error) => console.error(error));
-  }
+  };
 
   function handleVote(anId, voteDirection) {
     setMovies((prevMovies) =>
@@ -48,7 +52,7 @@ function App() {
       )
     );
     postVoteChange(voteDirection, anId);
-  }
+  };
 
   function postVoteChange(voteDirection, id) {
     const requestBody = {
@@ -72,7 +76,7 @@ function App() {
       .catch((error) => {
         console(error => console.error(error));
       });
-  }
+  };
 
   const handleMovieClick = (id) => {
     fetchMovieDetails(id);
@@ -89,7 +93,7 @@ function App() {
   function getRandomFive(aMovieList, numOfMovies) {
     let index = [...aMovieList].sort(() => 0.5 - Math.random());
     return index.slice(0, numOfMovies);
-  }
+  };
 
   function getFiveDetails(aMovieList) {
     aMovieList.forEach((film) => {
@@ -113,6 +117,10 @@ function App() {
 
   forRandomScroller();
 
+  if (loading && theRandomList.length !== 5) {
+    return <h1> Loading... </h1>
+  }
+
   return (
     <main className="App">
       <Routes>
@@ -123,7 +131,7 @@ function App() {
               <header>
                 <h1>Rancid Tomatillos</h1>
               </header>
-              <RandomScroller theRandomList={theRandomList} />
+              <RandomScroller theRandomList={ theRandomList } />
               <MoviesContainer
                 movies={movies}
                 addUpVote={(id) => handleVote(id, 'up')}

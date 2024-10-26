@@ -24,15 +24,16 @@ describe('Main Page', () => {
   
   it('checks page display', () => {
     // hint: you'll want to add an intercept here if you are making a network request on page load!
+    cy.wait(5000)
     cy.get('h1').contains('Rancid Tomatillos')
     .get('.random-scroller-container').should('exist')
-    cy.wait(1500).get('.random-scroller-container').children().should('have.length', 2)
+    .get('.random-scroller-container').children().should('have.length', 2)
     .get('.MoviesContainer').should('exist').children().should('have.length', 2)
-    .get('.MoviesContainer > :nth-child(1) > .movie-poster').should('have.attr', 'alt', 'The Dark Knight')
+    .get('.MoviesContainer > :nth-child(1) > .movie-poster').should('have.attr', 'alt', 'Poster for The Dark Knight')
     .get('.MoviesContainer > :nth-child(1) > .vote-count-box > .upvote-span > .upvote-arrow').should('exist')
     .get('.MoviesContainer > :nth-child(1) > .vote-count-box').should('contain', 32544)
     .get('.MoviesContainer > :nth-child(1) > .vote-count-box > .downvote-span > .downvote-arrow').should('exist')
-    .get('.MoviesContainer > :nth-child(2) > .movie-poster').should('have.attr', 'alt', 'Parasite')
+    .get('.MoviesContainer > :nth-child(2) > .movie-poster').should('have.attr', 'alt', 'Poster for Parasite')
     .get('.MoviesContainer > :nth-child(2) > .vote-count-box > .upvote-span > .upvote-arrow').should('exist')
     .get('.MoviesContainer > :nth-child(2) > .vote-count-box').should('contain', 18018)
     .get('.MoviesContainer > :nth-child(2) > .vote-count-box > .downvote-span > .downvote-arrow').should('exist')
@@ -83,6 +84,6 @@ describe('Main Page', () => {
     cy.on('window:alert', (str) => {
       expect(str).to.equal('Oops! Something is wrong at the server! Please try accessing Rancid Tomatillos later!')
     })
-    .get('.random-scroller-container-error > .error-message-title').should('contain', 'NO MOVIES RECIEVED!')
+    cy.wait(1000).get('.random-scroller-container-error > .error-message-title').should('contain', 'NO MOVIES RECIEVED!')
   })
 })
