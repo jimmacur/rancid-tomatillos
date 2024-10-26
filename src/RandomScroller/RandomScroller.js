@@ -4,15 +4,27 @@ import "./RandomScroller.css";
 
 function RandomScroller({ theRandomList }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [stateRandomList, setStateRandomList] = useState([])
+
+  useEffect(() => {
+    delayStateFunc()
+  }, []);
+  
+  function delayStateFunc () {
+    setTimeout(() => {
+      console.log('HIT DELAY')
+      setStateRandomList([...theRandomList])
+    }, 1000);
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % theRandomList.length)
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % stateRandomList.length)
     }, 5000);
     return () => clearInterval(intervalId)
-  }, [theRandomList]);
+  }, [stateRandomList]);
 
-  if (theRandomList.length === 1) {
+  if (stateRandomList.length === 1) {
     return(
       <div className={'random-scroller-container-error'}>
         <h2 className={ 'error-message-title' }> NO MOVIES RECIEVED! </h2>
@@ -22,7 +34,7 @@ function RandomScroller({ theRandomList }) {
     return (
       <div className={'random-scroller-container'}>
         {
-          theRandomList.map((movie, index) => {
+          stateRandomList.map((movie, index) => {
             return (
               <div key={movie.id} className={`movie-for-scroller ${currentIndex === index ? 'currentIndex' : 'currentIndex-hidden'}`} >
                 <img className={'movie-scroller-img'} src={`${movie.backdrop_path}`} alt-text={' '} />
