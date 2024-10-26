@@ -12,7 +12,6 @@ function RandomScroller({ theRandomList }) {
   
   function delayStateFunc () {
     setTimeout(() => {
-      console.log('HIT DELAY')
       setStateRandomList([...theRandomList])
     }, 1000);
   };
