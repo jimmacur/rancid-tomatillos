@@ -4,9 +4,39 @@ import MovieDetails from "../MovieDetails/MovieDetails.js";
 import RandomScroller from "../RandomScroller/RandomScroller.js";
 import MoviesContainer from "../MoviesContainer/MoviesContainer.js";
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 
 const API_BASE_URL = "https://rancid-tomatillos-api-cc6f59111a05.herokuapp.com/api/v1/movies";
+
+function MovieDetailsWrapper({ handleClose }) {
+  const { id } = useParams();
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      fetchMovieDetails(id);
+    }
+  }, [id]);
+
+  function fetchMovieDetails(id) {
+    fetch(`${API_BASE_URL}/${id}`)
+      .then((response) => response.json())
+      .then((data) => setSelectedMovie(data))
+      .catch((error) => console.error(error));
+  }
+
+  return (
+    <>
+      <header>
+        <h1>Rancid Tomatillos</h1>
+        <button className="home-button" onClick={handleClose}>
+          <img className={"home-button-img"} src={homeIcon} alt="home icon" />
+        </button>
+      </header>
+      {selectedMovie && <MovieDetails movie={selectedMovie} />}
+    </>
+  )
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -144,15 +174,11 @@ function App() {
         <Route
           path="/movies/:id"
           element={
-            <>
-              <header>
-                <h1>Rancid Tomatillos</h1>
-                <button className="home-button" onClick={handleClose}>
-                  <img className={"home-button-img"} src={homeIcon} alt="home icon" />
-                </button>
-              </header>
-              {selectedMovie && <MovieDetails movie={selectedMovie} />}
-            </>
+            <MovieDetailsWrapper
+              movies={movies}
+              handleClose={handleClose}
+              handleVote={handleVote}
+            />
           }
         />
       </Routes>
