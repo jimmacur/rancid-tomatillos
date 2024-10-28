@@ -177,7 +177,6 @@ function App() {
             <MovieDetailsWrapper
               movies={movies}
               handleClose={handleClose}
-              handleVote={handleVote}
             />
           }
         />
